@@ -56,6 +56,10 @@ public class ViewUser {
                     String phone = prompt("Номер телефона: ");
                     String userid = prompt("Идентификатор пользователя: ");
                     userController.editUser(new User(userid, firstName, lastName, phone));
+                case DELETE:
+                    String deleteID = prompt("Идентификатор пользователя: ");
+                    userController.deleteUser(deleteID);
+                    break;
             }
         }
     }
