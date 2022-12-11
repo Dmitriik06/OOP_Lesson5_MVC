@@ -1,6 +1,7 @@
 package personal.views;
 
 import personal.controllers.UserController;
+import personal.exception.CommandException;
 import personal.model.User;
 
 import java.util.Scanner;
@@ -17,16 +18,26 @@ public class ViewUser {
         Commands com = Commands.NONE;
 
         while (true) {
-            String command = prompt("Введите команду: ");
-            com = Commands.valueOf(command);
+            try {
+                String command = prompt("Введите команду: ");
+                com = Commands.valueOf(command.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Unknown command");
+                continue;
+            }
             if (com == Commands.EXIT) return;
             switch (com) {
                 case CREATE:
-                    String firstName = prompt("Имя: ");
-                    String lastName = prompt("Фамилия: ");
-                    String phone = prompt("Номер телефона: ");
-                    userController.saveUser(new User(firstName, lastName, phone));
-                    break;
+                    try {
+                        String firstName = prompt("Имя: ");
+                        String lastName = prompt("Фамилия: ");
+                        String phone = prompt("Номер телефона: ");
+                        userController.saveUser(new User(firstName, lastName, phone));
+                        break;
+                    } catch (IllegalStateException e){
+                        System.out.println(e.getMessage());
+                        continue;
+                    }
                 case READ:
                     String id = prompt("Идентификатор пользователя: ");
                     try {
@@ -36,6 +47,15 @@ public class ViewUser {
                         throw new RuntimeException(e);
                     }
                     break;
+                case LIST:
+                    userController.readUsers().forEach(System.out::println);
+                    break;
+                case UPDATE:
+                    String firstName = prompt("Имя: ");
+                    String lastName = prompt("Фамилия: ");
+                    String phone = prompt("Номер телефона: ");
+                    String userid = prompt("Идентификатор пользователя: ");
+                    userController.editUser(new User(userid, firstName, lastName, phone));
             }
         }
     }

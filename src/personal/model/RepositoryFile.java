@@ -43,4 +43,38 @@ public class RepositoryFile implements Repository {
         fileOperation.saveAllLines(lines);
         return id;
     }
+
+    public void updateUser(User user){
+        deleteUser(user.getId());
+        List<User> users = getAllUsers();
+        saveUser(user, users);
+    }
+
+    private void saveUser(User user, List<User> users){
+        users.add(user);
+        saveUsers(users);
+    }
+
+    public void deleteUser(String userID){
+        List<User> users = getAllUsers();
+        users.remove(findUser(userID, users));
+        saveUsers(users);
+    }
+
+    private User findUser(String userID, List<User> users){
+        for (User user: users) {
+            if (user.getId().equals(userID)) {
+                return user;
+            }
+        }
+        throw new IllegalStateException("User not found");
+    }
+
+    private void saveUsers(List<User> users){
+        List<String> lines = new ArrayList<>();
+        for (User item: users) {
+            lines.add(mapper.map(item));
+        }
+        fileOperation.saveAllLines(lines);
+    }
 }
