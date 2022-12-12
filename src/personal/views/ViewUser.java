@@ -48,7 +48,11 @@ public class ViewUser {
                     }
                     break;
                 case LIST:
-                    userController.readUsers().forEach(System.out::println);
+                    if (userController.readUsers().isEmpty()){
+                        System.out.println("Users not found, file is empty");
+                    } else {
+                        userController.readUsers().forEach(System.out::println);
+                    }
                     break;
                 case UPDATE:
                     String firstName = prompt("Имя: ");

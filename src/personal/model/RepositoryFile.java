@@ -13,10 +13,13 @@ public class RepositoryFile implements Repository {
 
     @Override
     public List<User> getAllUsers() {
-        List<String> lines = fileOperation.readAllLines();
         List<User> users = new ArrayList<>();
-        for (String line : lines) {
-            users.add(mapper.map(line));
+        try {
+            List<String> lines = fileOperation.readAllLines();
+            for (String line : lines) {
+                users.add(mapper.map(line));
+            }
+        } catch (ArrayIndexOutOfBoundsException e){
         }
         return users;
     }
